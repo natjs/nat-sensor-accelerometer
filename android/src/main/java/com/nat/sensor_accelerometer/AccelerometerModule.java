@@ -12,32 +12,32 @@ import java.util.TimerTask;
 
 /**
  * Created by xuqinchao on 17/2/6.
- *  Copyright (c) 2017 Nat. All rights reserved.
+ *  Copyright (c) 2017 Instapp. All rights reserved.
  */
 
-public class HLAccelerometerModule {
+public class AccelerometerModule {
 
     private boolean mClearWatch;
     private float x;
     private float y;
     private float z;
     private Timer timer;
-    int interval = 100;
+    int interval = 32;
     private SensorManager mWatchManager;
-    private HLModuleResultListener mListener;
+    private ModuleResultListener mListener;
 
     private Context mContext;
-    private static volatile HLAccelerometerModule instance = null;
+    private static volatile AccelerometerModule instance = null;
 
-    private HLAccelerometerModule(Context context){
+    private AccelerometerModule(Context context){
         mContext = context;
     }
 
-    public static HLAccelerometerModule getInstance(Context context) {
+    public static AccelerometerModule getInstance(Context context) {
         if (instance == null) {
-            synchronized (HLAccelerometerModule.class) {
+            synchronized (AccelerometerModule.class) {
                 if (instance == null) {
-                    instance = new HLAccelerometerModule(context);
+                    instance = new AccelerometerModule(context);
                 }
             }
         }
@@ -46,10 +46,10 @@ public class HLAccelerometerModule {
     }
 
 
-    public void get(final HLModuleResultListener listener){
+    public void get(final ModuleResultListener listener){
         if (listener == null) return;
         if (mContext == null) {
-            listener.onResult(HLConstant.HL_ERROR_NULL_CONTEXT);
+            listener.onResult(Constant.ERROR_NULL_CONTEXT);
             return;
         }
 
@@ -79,13 +79,12 @@ public class HLAccelerometerModule {
         }, sm.getDefaultSensor(sensorType), SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    public void watch(HashMap<String, Integer> option, final HLModuleResultListener listener){
+    public void watch(HashMap<String, Integer> option, final ModuleResultListener listener){
         if (mWatchManager != null)return;
         mListener = listener;
         if (option != null && option.containsKey("interval")) {
             interval = option.get("interval");
         }
-        interval = 1000;
         timer = new Timer();
         timer.schedule(new MyTimerTask(), 0, interval);
         mWatchManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
@@ -115,7 +114,7 @@ public class HLAccelerometerModule {
         }, mWatchManager.getDefaultSensor(sensorType), SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    public void clearWatch(HLModuleResultListener listener){
+    public void clearWatch(ModuleResultListener listener){
         if (listener == null || mWatchManager == null)return;
         mClearWatch = true;
         listener.onResult(null);
