@@ -93,6 +93,7 @@
     if (self.motionManager.isAccelerometerActive == YES) {
         // 结束更新硬件数据
         [self.motionManager stopAccelerometerUpdates];
+        back(nil,nil);
     }
     
 }
